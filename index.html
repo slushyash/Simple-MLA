@@ -1,0 +1,228 @@
+<html>
+	<head>
+		<title>MLA Sucks</title>
+		<style type="text/css">
+body {
+	margin: 0;
+	background-color: #cccccc;
+}
+
+#bar {
+	position: fixed;
+	top: 0;
+	height: 32px;
+	width: 100%;
+	border-top: 1px solid #eeeeee;
+	border-bottom: 1px solid #777777;
+	background: -webkit-linear-gradient(top, #cccccc, #999999);
+	background: -moz-linear-gradient(top, #cccccc, #999999);
+	box-shadow: 0 3px 10px rgba(0,0,0,0.5);
+	z-index: 10;
+	font-size: 24px;
+	color: #333333;
+	text-shadow: 0 1px #cccccc;
+}
+
+#bar a {
+	float: left;
+	height: 24px;
+	font-weight: bold;
+	font-family: Elegance, Ubuntu, 'Helvetica-Neue', 'Helvetica', 'Segoe UI', sans-serif;
+	color: #333333;
+	text-decoration: none;
+	padding: 4px 16px;
+}
+#bar a:hover {
+	color: #3366ff;
+}
+
+#bar input {
+	float: right;
+	display: block;
+	height: 32px;
+	padding: 0 16px;
+	margin: 0;
+	color: #333333;
+	font-size: 24px;
+	font-family: Ubuntu, 'Helvetica-Neue', 'Helvetica', 'Segoe UI', sans-serif !important;
+	text-shadow: 0 1px #cccccc;
+	background: -webkit-linear-gradient(top, #cccccc, #999999);
+	background: -moz-linear-gradient(top, #cccccc, #999999);
+	border: none;
+	cursor: pointer;
+	border-left: 2px groove rgba(216,216,216,0.5);
+}
+#bar input:hover {
+	background: -webkit-linear-gradient(top, #dddddd, #aaaaaa);
+	background: -moz-linear-gradient(top, #dddddd, #aaaaaa);
+}
+#bar input:active {
+	background: -webkit-linear-gradient(bottom, #cccccc, #999999);
+	background: -moz-linear-gradient(bottom, #cccccc, #999999);
+	box-shadow: 0 2px 10px rgba(0,0,0,0.5) inset;
+	/*font-size: 22px;
+	padding: 5px 16px;*/
+}
+
+#page {
+	background-color: #ffffff;
+	margin: 64px auto 32px auto;
+	width: 7.5in;
+	/*min-height: 9in;*/
+	padding: 1in;
+	/*border: 1px solid #808080;*/
+	box-shadow: 0 3px 10px rgba(0,0,0,0.25);
+}
+
+#page input {
+	display: block;
+	margin: 0 0 1em 0;
+	font-family: 'Times New Roman', Times, serif;
+	font-size: 12pt;
+}
+
+#page input[name="title"] {
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	width: 50%;
+}
+
+textarea {
+	display: block;
+	margin: 0;
+	width: 100%;
+	max-width: 100%;
+	min-height: 7in;
+	line-height: 2;
+	font-family: 'Times New Roman', Times, serif;
+	font-size: 12pt;
+	overflow: visible;
+}
+
+footer {
+	text-align: center;
+	color: #666666;
+	font-family: Ubuntu, 'Helvetica-Neue', 'Helvetica', 'Segoe UI', sans-serif;
+	text-shadow: 0 1px #eeeeee;
+	margin-bottom: 32px;
+}
+		</style>
+		<script type="text/javascript">
+var f,
+	fName,
+	lName,
+	course,
+	teacher,
+	title,
+	essay,
+	saveAfter = 10,
+	saveTimer,
+	keyCount = 0;
+
+function save() {
+	console.log('saved');
+
+	if (saveTimer) window.clearTimeout(saveTimer);
+	keyCount = 0;
+
+	localStorage.setItem('MLAfirstName', fName.value);
+	localStorage.setItem('MLAlastName', lName.value);
+	localStorage.setItem('MLAcourseName', course.value);
+	localStorage.setItem('MLAteacherName', teacher.value);
+	localStorage.setItem('MLAtitle', title.value);
+	localStorage.setItem('MLAessay', essay.value);
+
+	f.save.value = "Saved!";
+	f.save.disabled = true;
+	f.save.style.color = "#666666";
+	window.setTimeout(function () {
+		f.save.value = "Save";
+		f.save.disabled = false;
+	f.save.style.color = "#333333";
+	}, 2000);
+}
+
+function clear() {
+	if (confirm("Are you sure you want to clear everything?")) {
+		f.reset();
+		save();
+	}
+}
+
+function keypress(e) {
+	if (saveTimer) window.clearTimeout(saveTimer);
+	saveTimer = window.setTimeout(save, 5000);
+
+	if (keyCount == saveAfter - 1) save();
+	keyCount = (keyCount + 1) % saveAfter;
+}
+
+window.addEventListener('load', function () {
+	console.log('loaded');
+	f = document.forms.input;
+	fName = f.firstName;
+	lName = f.lastName;
+	course = f.courseName;
+	teacher = f.teacherName;
+	title = f.title;
+	essay = f.essay;
+
+	fName.value = localStorage.getItem('MLAfirstName') || "";
+	lName.value = localStorage.getItem('MLAlastName') || "";
+	course.value = localStorage.getItem('MLAcourseName') || "";
+	teacher.value = localStorage.getItem('MLAteacherName') || "";
+	title.value = localStorage.getItem('MLAtitle') || "";
+	essay.value = localStorage.getItem('MLAessay') || "";
+
+	fName.addEventListener('change', save, false);
+	lName.addEventListener('change', save, false);
+	course.addEventListener('change', save, false);
+	teacher.addEventListener('change', save, false);
+	title.addEventListener('change', save, false);
+	essay.addEventListener('change', save, false);
+	essay.addEventListener('keypress', keypress, false);
+	essay.addEventListener('paste', keypress, false);
+	essay.addEventListener('cut', keypress, false);
+	f.clear.addEventListener('click', clear, false);
+	f.save.addEventListener('click', save, false);
+}, false);
+
+window.addEventListener('beforeunload', save, false);
+	
+		</script>
+		<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-27101218-1']);
+  _gaq.push(['_setDomainName', 'mlasucks.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+	</head>
+	<body>
+		<form name="input" action="http://mlasucks.com/parse.php" method="post">
+			<div id="bar">
+				<a href="/">MLA Sucks</a>
+				<input type="submit" value="Download" />
+				<input type="button" name="clear" value="Clear" />
+				<input type="button" name="save" value="Save" />
+			</div>
+			<div id="page">
+				<input type="text" name="firstName" placeholder="First name" />
+				<input type="text" name="lastName" placeholder="Last name" />
+				<input type="text" name="courseName" placeholder="Course" />
+				<input type="text" name="teacherName" placeholder="Teacher" />
+				<input type="text" name="title" placeholder="Title" />
+				<textarea name="essay" placeholder="Type your paper here!"></textarea>
+			</div>
+		</form>
+		<footer>&copy; 2011 Yash Aggarwal. Design by Max Ciotti.</footer>
+	</body>
+</html>
